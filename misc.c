@@ -6,7 +6,10 @@ void wait(ulong_t milliseconds)
 #	ifdef _WIN32
 	Sleep(milliseconds);
 #	else
-	sleep(milliseconds / 1000);
+	struct timespec ts;
+	ts.tv_sec = milliseconds/1000;
+	ts.tv_nsec = (milliseconds % 1000) * 1000000;
+	nanosleep(&ts, NULL);
 #	endif
 #endif
 }
