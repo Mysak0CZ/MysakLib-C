@@ -1,12 +1,13 @@
 #pragma once
 
+#include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>
 
 #ifdef _WIN32
 #	include <windows.h>
 #	include <time.h>
-#   include <conio.h>
+#	include <conio.h>
 #else
 #	include <time.h>
 #	include <unistd.h>
