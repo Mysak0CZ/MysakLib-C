@@ -1,12 +1,12 @@
 #pragma once
 
-#include "types.h"
 #include "misc.h"
+#include "types.h"
 
 /* Class MysakLib */
 typedef struct _MysakLib
 {
-    ulong_t randSeed;
+	ulong_t randSeed;
 	FILE* logfile;
 	int loglevel;
 	int internalLoglevel;

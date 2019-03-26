@@ -20,8 +20,8 @@ MysakLib* MysakLib_new_lli(char* logfile, int logLevel, int internalLoglevel)
 	MysakLib* self = (MysakLib*)malloc(sizeof(MysakLib));
 	if (self == NULL)
 		return NULL;
-	self->randSeed         = time(NULL);
-	self->loglevel         = logLevel;
+	self->randSeed = time(NULL);
+	self->loglevel = logLevel;
 	self->internalLoglevel = internalLoglevel;
 	if (logfile != NULL) {
 		self->logfile = fopen(logfile, "w");
