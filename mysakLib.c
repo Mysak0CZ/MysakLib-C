@@ -47,7 +47,7 @@ ulong_t MysakLib_randUInt(MysakLib* self, ulong_t min, ulong_t max)
 	return (self->randSeed % (max - min)) + min;
 }
 
-long MysakLib_randInt(MysakLib* self, int min, int max)
+long MysakLib_randInt(MysakLib* self, long min, long max)
 {
 	return MysakLib_randUInt(self, 0, max - min) + min;
 }
