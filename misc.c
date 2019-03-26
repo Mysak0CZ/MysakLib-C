@@ -101,7 +101,8 @@ void m_setConsolePos(long x, long y)
 ulong_t m_strCountChar(char* str, char target)
 {
 	ulong_t result = 0;
-	for (ulong_t i = 0; str[i] != '\0'; i++)
+	ulong_t i;
+	for (i = 0; str[i] != '\0'; i++)
 		if (str[i] == target)
 			result++;
 	return result;
@@ -109,7 +110,8 @@ ulong_t m_strCountChar(char* str, char target)
 
 ulong_t m_strIndexOf(char* str, char target)
 {
-	for (ulong_t i = 0; str[i] != '\0'; i++)
+	ulong_t i;
+	for (i = 0; str[i] != '\0'; i++)
 		if (str[i] == target)
 			return i;
 	return -1;
