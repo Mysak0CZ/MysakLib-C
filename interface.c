@@ -35,7 +35,7 @@ long m_readInt(char* query)
 		} else {
 			printf("\r> %c%ld  ", negative ? '-' : ' ', num);
 		}
-		c = getch();
+		c = m_getCharB();
 		if (c == '-')
 			negative = !negative;
 		else if (c == '\n' || c == '\r') {
@@ -117,12 +117,14 @@ long m_ioSelection(char* title, char* options)
 		putchar(currentOption == step ? ']' : ' ');
 		step++;
 		m_setConsolePos(0, consoleSize.y - 1);
-		c = getch();
+		c = m_getCharB();
 		switch (c) {
 			case '8':
+			case KEY_UPARROW:
 				currentOption--;
 				break;
 			case '2':
+			case KEY_DOWNARROW:
 				currentOption++;
 				break;
 			case '\n':
@@ -135,18 +137,32 @@ long m_ioSelection(char* title, char* options)
 #endif
 				MysakLib_internals_logInfo("ioSelections \"%s\": %ld", title, currentOption);
 				return currentOption;
-			case 0xe0:  // Multichar command
-				c = getch();
-				if (c == 'H') {  // Up arrow
-					currentOption--;
-					break;
-				} else if (c == 'P') {  // Down arrow
-					currentOption++;
-					break;
-				}
-			default:
-				fprintf(stderr, "Invalid key %c (%x)", c, c);
-				break;
 		}
 	}
+}
+
+int m_getCharB()
+{
+	int res;
+#ifdef _WIN32
+	if (!kbhit())
+		return 0;
+	res = _getch();
+	if (res == 0 || res == 0xe0) {  // Multichar command
+		res = res << 8;
+		res |= _getch();
+	}
+#else
+#endif
+	return res;
+}
+
+int m_getCharNB()
+{
+#ifdef _WIN32
+	if (!kbhit())
+		return 0;
+	return m_getCharB();
+#else
+#endif
 }
