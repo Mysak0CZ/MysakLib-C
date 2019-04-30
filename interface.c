@@ -145,8 +145,6 @@ int m_getCharB()
 {
 	int res;
 #ifdef _WIN32
-	if (!kbhit())
-		return 0;
 	res = _getch();
 	if (res == 0 || res == 0xe0) {  // Multichar command
 		res = res << 8;
