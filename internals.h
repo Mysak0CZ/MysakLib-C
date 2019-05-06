@@ -1,9 +1,24 @@
 #pragma once
-#include "mysakLib.h"
 #include "types.h"
 
+#ifndef _WIN
+#	include <termios.h>
+#endif
+
+/* Class MysakLib */
+typedef struct _MysakLib
+{
+	ulong_t randSeed;
+	FILE* logfile;
+	int loglevel;
+	int internalLoglevel;
+#if defined INTERACTIVE && !defined _WIN
+	struct termios oldTerminos;
+#endif
+} MysakLib_t;
+
 /* Globals */
-MysakLib MysakLib_internals_mlib;
+MysakLib_t MysakLib_internals_mlib;
 bool_t MysakLib_internals_initialized = FALSE;
 
 /* Functions */

@@ -1,6 +1,8 @@
 #include "mysakLib.h"
 #include "internals.h"
 
+#include <stdarg.h>
+
 bool_t MysakLib_initialize()
 {
 	return MysakLib_initialize_lli(NULL, M_LOGLEVEL_INFO, M_LOGLEVEL_WARNING);
@@ -29,6 +31,13 @@ bool_t MysakLib_initialize_lli(char* logfile, int logLevel, int internalLoglevel
 		}
 	} else
 		MysakLib_internals_mlib.logfile = NULL;
+#if defined INTERACTIVE && !defined _WIN
+	struct termios newTerminos;
+	tcgetattr(STDIN_FILENO, &(MysakLib_internals_mlib.oldTerminos));
+	tcgetattr(STDIN_FILENO, &newTerminos);
+	cfmakeraw(&newTerminos);
+	tcsetattr(STDIN_FILENO, TCSANOW, &newTerminos);
+#endif
 	MysakLib_internals_logDebug("MysakLib: initialized");
 	return TRUE;
 }
@@ -40,6 +49,10 @@ void MysakLib_delete()
 	if (MysakLib_internals_mlib.logfile != NULL)
 		fclose(MysakLib_internals_mlib.logfile);
 	MysakLib_internals_initialized = FALSE;
+	MysakLib_internals_mlib.logfile = NULL;
+#if defined INTERACTIVE && !defined _WIN
+	tcsetattr(STDIN_FILENO, TCSANOW, &(MysakLib_internals_mlib.oldTerminos));
+#endif
 }
 
 ulong_t MysakLib_randUInt(ulong_t min, ulong_t max)

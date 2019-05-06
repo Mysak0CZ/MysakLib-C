@@ -1,9 +1,19 @@
 #pragma once
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+#if defined _WIN32 || defined _WIN64
+#	define _WIN
+#	error "Todo!"
+#else
+#endif
+
+/*
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
-
 #ifdef _WIN32
 #	include <windows.h>
 #	include <time.h>
@@ -12,9 +22,10 @@
 #	include <time.h>
 #	include <unistd.h>
 #	include <stdarg.h>
+#	include <string.h>
 #	include <sys/ioctl.h>
-#	define DISABLE_INTERACTIVE
 #endif
+*/
 
 #ifndef DISABLE_INTERACTIVE
 #	define INTERACTIVE
@@ -30,8 +41,8 @@ typedef char bool_t;
 typedef unsigned int uint_t;
 typedef unsigned long ulong_t;
 
-typedef struct _vector2
+typedef struct _vector2_t
 {
 	long x;
 	long y;
-} vector2;
+} vector2_t;

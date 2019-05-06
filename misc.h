@@ -6,7 +6,7 @@
 void wait(ulong_t milliseconds);
 
 /* Get size of the console (real, not buffer) */
-vector2 m_getConsoleSize();
+vector2_t m_getConsoleSize();
 
 /* set cursor position in console (top-left <=> 0, 0) */
 void m_setConsolePos(long x, long y);

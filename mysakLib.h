@@ -1,6 +1,5 @@
 #pragma once
 
-#include "misc.h"
 #include "types.h"
 
 /* Defines */
@@ -8,15 +7,6 @@
 #define M_LOGLEVEL_WARNING 1
 #define M_LOGLEVEL_INFO 2
 #define M_LOGLEVEL_DEBUG 3
-
-/* Class MysakLib */
-typedef struct _MysakLib
-{
-	ulong_t randSeed;
-	FILE* logfile;
-	int loglevel;
-	int internalLoglevel;
-} MysakLib;
 
 /* Create new MysakLib */
 bool_t MysakLib_initialize();

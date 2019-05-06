@@ -1,9 +1,17 @@
 #include "misc.h"
 
+#ifdef _WIN
+#else
+#	include <time.h>
+#	include <sys/ioctl.h>
+#	include <stdio.h>
+#endif
+
 void wait(ulong_t milliseconds)
 {
+	fflush(stdout);
 #ifndef DISABLE_TIMING
-#	ifdef _WIN32
+#	ifdef _WIN
 	Sleep(milliseconds);
 #	else
 	struct timespec ts;
@@ -14,10 +22,10 @@ void wait(ulong_t milliseconds)
 #endif
 }
 
-vector2 m_getConsoleSize()
+vector2_t m_getConsoleSize()
 {
-	vector2 result;
-#ifdef _WIN32
+	vector2_t result;
+#ifdef _WIN
 	CONSOLE_SCREEN_BUFFER_INFO csbi;
 	GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
 	result.x = csbi.srWindow.Right - csbi.srWindow.Left + 1;
@@ -25,22 +33,21 @@ vector2 m_getConsoleSize()
 #else
 	struct winsize win;
 	ioctl(STDOUT_FILENO, TIOCGWINSZ, &win);
-	result.x = win.ws_row;
-	result.y = win.ws_col;
+	result.x = win.ws_col;
+	result.y = win.ws_row;
 #endif
 	return result;
 }
 
 void m_setConsolePos(long x, long y)
 {
-#ifdef _WIN32
+#ifdef _WIN
 	COORD coord;  // coordinates
 	coord.X = x;
 	coord.Y = y;  // X and Y coordinates
 	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 #else
-	fprintf(stdout, "%c[%ld;%ldf", 0x1B, x + 1, y + 1);
-	fflush(stdout);
+	fprintf(stdout, "%c[%ld;%ldf", 0x1B, y + 1, x + 1);
 #endif
 }
 

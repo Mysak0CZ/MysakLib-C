@@ -1,4 +1,8 @@
 #include "internals.h"
+#include "mysakLib.h"
+
+#include <stdarg.h>
+#include <time.h>
 
 void MysakLib_internals_assertInitialized()
 {
