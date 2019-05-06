@@ -12,6 +12,7 @@ typedef struct _MysakLib
 	FILE* logfile;
 	int loglevel;
 	int internalLoglevel;
+	ulong_t startTime;
 #if defined INTERACTIVE && !defined _WIN
 	struct termios oldTerminos;
 #endif

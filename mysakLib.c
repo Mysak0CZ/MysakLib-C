@@ -2,6 +2,7 @@
 #include "internals.h"
 
 #include <stdarg.h>
+#include <time.h>
 
 bool_t MysakLib_initialize()
 {
@@ -22,6 +23,7 @@ bool_t MysakLib_initialize_lli(char* logfile, int logLevel, int internalLoglevel
 {
 	MysakLib_internals_initialized = TRUE;
 	MysakLib_internals_mlib.randSeed = time(NULL);
+	MysakLib_internals_mlib.startTime = time(NULL);
 	MysakLib_internals_mlib.loglevel = logLevel;
 	MysakLib_internals_mlib.internalLoglevel = internalLoglevel;
 	if (logfile != NULL) {
@@ -78,7 +80,7 @@ void MysakLib_logError(char* format, ...)
 	vsnprintf(buffer, 1024, format, args);
 	if (MysakLib_internals_mlib.loglevel >= M_LOGLEVEL_ERROR) {
 		buffer[1024] = '\0';
-		fprintf(MysakLib_internals_mlib.logfile != NULL ? MysakLib_internals_mlib.logfile : stderr, "%10ld   ERROR %s\n", time(NULL), buffer);
+		fprintf(MysakLib_internals_mlib.logfile != NULL ? MysakLib_internals_mlib.logfile : stderr, "%5ld   ERROR %s\n", time(NULL) - MysakLib_internals_mlib.startTime, buffer);
 	}
 	va_end(args);
 	if (MysakLib_internals_mlib.logfile != NULL)
@@ -94,7 +96,7 @@ void MysakLib_logWarning(char* format, ...)
 	vsnprintf(buffer, 1024, format, args);
 	if (MysakLib_internals_mlib.loglevel >= M_LOGLEVEL_WARNING) {
 		buffer[1024] = '\0';
-		fprintf(MysakLib_internals_mlib.logfile != NULL ? MysakLib_internals_mlib.logfile : stderr, "%10ld   WARN  %s\n", time(NULL), buffer);
+		fprintf(MysakLib_internals_mlib.logfile != NULL ? MysakLib_internals_mlib.logfile : stderr, "%5ld   WARN  %s\n", time(NULL) - MysakLib_internals_mlib.startTime, buffer);
 	}
 	va_end(args);
 	if (MysakLib_internals_mlib.logfile != NULL)
@@ -110,7 +112,7 @@ void MysakLib_logInfo(char* format, ...)
 	vsnprintf(buffer, 1024, format, args);
 	if (MysakLib_internals_mlib.loglevel >= M_LOGLEVEL_INFO) {
 		buffer[1024] = '\0';
-		fprintf(MysakLib_internals_mlib.logfile != NULL ? MysakLib_internals_mlib.logfile : stderr, "%10ld   INFO  %s\n", time(NULL), buffer);
+		fprintf(MysakLib_internals_mlib.logfile != NULL ? MysakLib_internals_mlib.logfile : stderr, "%5ld   INFO  %s\n", time(NULL) - MysakLib_internals_mlib.startTime, buffer);
 	}
 	va_end(args);
 	if (MysakLib_internals_mlib.logfile != NULL)
@@ -126,7 +128,7 @@ void MysakLib_logDebug(char* format, ...)
 	vsnprintf(buffer, 1024, format, args);
 	if (MysakLib_internals_mlib.loglevel >= M_LOGLEVEL_DEBUG) {
 		buffer[1024] = '\0';
-		fprintf(MysakLib_internals_mlib.logfile != NULL ? MysakLib_internals_mlib.logfile : stderr, "%10ld   DEBUG %s\n", time(NULL), buffer);
+		fprintf(MysakLib_internals_mlib.logfile != NULL ? MysakLib_internals_mlib.logfile : stderr, "%5ld   DEBUG %s\n", time(NULL) - MysakLib_internals_mlib.startTime, buffer);
 	}
 	va_end(args);
 	if (MysakLib_internals_mlib.logfile != NULL)

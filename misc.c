@@ -1,6 +1,7 @@
 #include "misc.h"
 
 #ifdef _WIN
+#	include <Windows.h>
 #else
 #	include <time.h>
 #	include <sys/ioctl.h>

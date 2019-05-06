@@ -6,9 +6,9 @@
 #include <string.h>
 
 #ifdef _WIN
+#	include <conio.h>
 #else
 #	include <sys/ioctl.h>
-#	include <termios.h>
 #endif
 
 bool_t m_askYN(char* question)
@@ -27,6 +27,8 @@ bool_t m_askYN(char* question)
 			MysakLib_internals_logInfo("askYN \"%s\": true", question);
 #ifdef INTERACTIVE
 			putchar('\n');
+#else
+			m_getCharNB();
 #endif
 			return TRUE;
 		}
@@ -34,6 +36,8 @@ bool_t m_askYN(char* question)
 			MysakLib_internals_logInfo("askYN \"%s\": false", question);
 #ifdef INTERACTIVE
 			putchar('\n');
+#else
+			m_getCharNB();
 #endif
 			return FALSE;
 		}
@@ -246,11 +250,19 @@ int m_getCharB()
 {
 	int res;
 #ifdef _WIN
+#	ifdef INTERACTIVE
 	res = _getch();
 	if (res == 0 || res == 0xe0) {  // Multichar command
 		res <<= 8;
 		res |= _getch();
 	}
+#	else
+	res = getchar();
+	if (res == 0 || res == 0xe0) {  // Multichar command
+		res <<= 8;
+		res |= getchar();
+	}
+#	endif
 #else
 	int chr;
 
