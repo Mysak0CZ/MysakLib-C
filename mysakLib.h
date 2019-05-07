@@ -23,6 +23,9 @@ ulong_t MysakLib_randUInt(ulong_t min, ulong_t max);
 /* random int */
 long MysakLib_randInt(long min, long max);
 
+/* Probability in percent */
+bool_t m_prob(ulong_t probability);
+
 /* log error into logfile */
 void MysakLib_logError(char* format, ...);
 

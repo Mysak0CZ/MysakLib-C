@@ -68,7 +68,21 @@ ulong_t MysakLib_randUInt(ulong_t min, ulong_t max)
 
 long MysakLib_randInt(long min, long max)
 {
-	return MysakLib_randUInt(0, max - min) + min;
+	MysakLib_internals_assertInitialized();
+	ulong_t oldSeed = MysakLib_internals_mlib.randSeed;
+	MysakLib_internals_mlib.randSeed = ((1103515245ULL * MysakLib_internals_mlib.randSeed) + 12345ULL) % (1ULL << 31);
+	MysakLib_internals_logInfo("ranUInt %lu -> %lu %ld~%ld = %ld", oldSeed, MysakLib_internals_mlib.randSeed, min, max, (MysakLib_internals_mlib.randSeed % (max - min)) + min);
+	return (MysakLib_internals_mlib.randSeed % (max - min)) + min;
+}
+
+bool_t m_prob(ulong_t probability)
+{
+	MysakLib_internals_assertInitialized();
+	ulong_t oldSeed = MysakLib_internals_mlib.randSeed;
+	MysakLib_internals_mlib.randSeed = ((1103515245ULL * MysakLib_internals_mlib.randSeed) + 12345ULL) % (1ULL << 31);
+	bool_t result = (MysakLib_internals_mlib.randSeed % 100) < probability ? TRUE : FALSE;
+	MysakLib_internals_logInfo("prob (%lu%%) %lu -> %lu (%lu%%) = %s", probability, oldSeed, MysakLib_internals_mlib.randSeed, (MysakLib_internals_mlib.randSeed % 100), result ? "true" : "false");
+	return result;
 }
 
 void MysakLib_logError(char* format, ...)
