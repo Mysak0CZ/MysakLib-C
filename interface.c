@@ -13,46 +13,59 @@
 
 bool_t m_askYN(char* question)
 {
+#ifdef INTERACTIVE
 	char answer;
 	MysakLib_internals_assertInitialized();
 	printf("%s [y/n]: ", question);
 	while (TRUE) {
 		fflush(stdout);
 		answer = tolower(m_getCharB());
-#ifndef INTERACTIVE
-		if (!isalnum(answer))
-			continue;
-#endif
 		if (answer == 'y') {
 			MysakLib_internals_logInfo("askYN \"%s\": true", question);
-#ifdef INTERACTIVE
 			putchar('\n');
-#else
-			m_getCharNB();
-#endif
 			return TRUE;
 		}
 		if (answer == 'n') {
 			MysakLib_internals_logInfo("askYN \"%s\": false", question);
-#ifdef INTERACTIVE
 			putchar('\n');
-#else
-			m_getCharNB();
-#endif
 			return FALSE;
 		}
-#ifndef INTERACTIVE
+	}
+#else
+	return m_askYN_plain(question);
+#endif
+}
+
+bool_t m_askYN_plain(char* question)
+{
+	char answer;
+	MysakLib_internals_assertInitialized();
+	printf("%s [y/n]: ", question);
+	while (TRUE) {
+		fflush(stdout);
+		answer = tolower(m_getCharB());
+		if (!isalnum(answer))
+			continue;
+		if (answer == 'y') {
+			MysakLib_internals_logInfo("askYN \"%s\": true", question);
+			m_getCharNB();
+			return TRUE;
+		}
+		if (answer == 'n') {
+			MysakLib_internals_logInfo("askYN \"%s\": false", question);
+			m_getCharNB();
+			return FALSE;
+		}
 		puts("Invalid option!");
 		printf("%s [y/n]: ", question);
-#endif
 	}
 }
 
 long m_readInt(char* query)
 {
+#ifdef INTERACTIVE
 	long num = 0;
 	MysakLib_internals_assertInitialized();
-#ifdef INTERACTIVE
 	bool_t negative = FALSE;
 	char c;
 	while (TRUE) {
@@ -81,6 +94,14 @@ long m_readInt(char* query)
 		}
 	}
 #else
+	return m_readInt_plain(query);
+#endif
+}
+
+long m_readInt_plain(char* query)
+{
+	long num = 0;
+	MysakLib_internals_assertInitialized();
 	if (query != NULL) {
 		printf("%s> ", query);
 	} else {
@@ -95,13 +116,12 @@ long m_readInt(char* query)
 		MysakLib_internals_logInfo("readInt NULL: %ld", num);
 	}
 	return num;
-#endif
 }
 
 void m_readStr(char* query, char* target, ulong_t maxLen)
 {
-	MysakLib_internals_assertInitialized();
 #ifdef INTERACTIVE
+	MysakLib_internals_assertInitialized();
 	ulong_t cLen = 0;
 	int c;
 	target[0] = '\0';
@@ -131,7 +151,14 @@ void m_readStr(char* query, char* target, ulong_t maxLen)
 		}
 	}
 #else
+	m_readStr_plain(query, target, maxLen);
+#endif
+}
+
+void m_readStr_plain(char* query, char* target, ulong_t maxLen)
+{
 	char buf[21];
+	MysakLib_internals_assertInitialized();
 	if (query != NULL) {
 		printf("\r%s> ", query);
 	} else {
@@ -145,12 +172,12 @@ void m_readStr(char* query, char* target, ulong_t maxLen)
 	} else {
 		MysakLib_internals_logInfo("readStr NULL: \"%s\"", target);
 	}
-#endif
 }
 
 long m_ioSelection(char* title, char* options)
 {
-	long optionsCount = 1;
+#ifdef INTERACTIVE
+	long optionsCount = m_strCountChar(options, '\n') + 1;
 	long currentOption = 0;
 	long i;
 	long step;
@@ -159,16 +186,11 @@ long m_ioSelection(char* title, char* options)
 	long tmp;
 	vector2_t consoleSize, newConsoleSize;
 	MysakLib_internals_assertInitialized();
-	for (i = 0; options[i] != '\0'; i++) {
-		if (options[i] == '\n')
-			optionsCount++;
-	}
 
 	consoleSize.x = 0;
 	consoleSize.y = 0;
 
 	while (TRUE) {
-#ifdef INTERACTIVE
 		newConsoleSize = m_getConsoleSize();
 		if (consoleSize.x != newConsoleSize.x || consoleSize.y != newConsoleSize.y) {
 			consoleSize = newConsoleSize;
@@ -221,7 +243,20 @@ long m_ioSelection(char* title, char* options)
 				MysakLib_internals_logInfo("ioSelections \"%s\": %ld", title, currentOption);
 				return currentOption;
 		}
+	}
 #else
+	return m_ioSelection_plain(title, options);
+#endif
+}
+
+long m_ioSelection_plain(char* title, char* options)
+{
+	long optionsCount = m_strCountChar(options, '\n') + 1;
+	long i;
+	long tmp;
+	MysakLib_internals_assertInitialized();
+
+	while (TRUE) {
 		puts(title);
 		tmp = 1;
 		printf("%ld) ", tmp);
@@ -233,7 +268,7 @@ long m_ioSelection(char* title, char* options)
 					printf("%ld) ", tmp);
 			}
 		}
-		printf("\n>");
+		printf("\n> ");
 		fflush(stdout);
 		while (scanf("%ld", &tmp) != 1)
 			getchar();
@@ -242,7 +277,6 @@ long m_ioSelection(char* title, char* options)
 			MysakLib_internals_logInfo("ioSelections \"%s\": %ld", title, tmp - 1);
 			return tmp - 1;
 		}
-#endif
 	}
 }
 

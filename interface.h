@@ -30,14 +30,26 @@
 /* Ask yes no question `{question} [y/n]: ` */
 bool_t m_askYN(char* question);
 
+/* Ask yes no question `{question} [y/n]: ` (non-interactive) */
+bool_t m_askYN_plain(char* question);
+
 /* Read int from stdin (`INTERACTIVE`?) */
 long m_readInt(char* query);
+
+/* Read int from stdin (non-interactive) */
+long m_readInt_plain(char* query);
 
 /* Read string from stdin up to lengh N */
 void m_readStr(char* query, char* target, ulong_t maxLen);
 
+/* Read string from stdin up to lengh N (non-interactive) */
+void m_readStr_plain(char* query, char* target, ulong_t maxLen);
+
 /* List selection, separate options by newline */
 long m_ioSelection(char* title, char* options);
+
+/* List selection, separate options by newline (non-interactive) */
+long m_ioSelection_plain(char* title, char* options);
 
 /* Get char blocking, can handle special keys */
 int m_getCharB();
