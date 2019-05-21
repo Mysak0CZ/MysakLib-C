@@ -4,6 +4,7 @@
 
 #include <ctype.h>
 #include <string.h>
+#include <stdarg.h>
 
 #ifdef _WIN
 #	include <conio.h>
@@ -11,7 +12,7 @@
 #	include <sys/ioctl.h>
 #endif
 
-bool_t m_askYN(char* question)
+bool_t m_askYN(const char* question)
 {
 #ifdef INTERACTIVE
 	char answer;
@@ -36,7 +37,7 @@ bool_t m_askYN(char* question)
 #endif
 }
 
-bool_t m_askYN_plain(char* question)
+bool_t m_askYN_plain(const char* question)
 {
 	char answer;
 	MysakLib_internals_assertInitialized();
@@ -61,7 +62,7 @@ bool_t m_askYN_plain(char* question)
 	}
 }
 
-long m_readInt(char* query)
+long m_readInt(const char* query)
 {
 #ifdef INTERACTIVE
 	long num = 0;
@@ -98,7 +99,7 @@ long m_readInt(char* query)
 #endif
 }
 
-long m_readInt_plain(char* query)
+long m_readInt_plain(const char* query)
 {
 	long num = 0;
 	MysakLib_internals_assertInitialized();
@@ -118,10 +119,11 @@ long m_readInt_plain(char* query)
 	return num;
 }
 
-void m_readStr(char* query, char* target, ulong_t maxLen)
+void m_readStr(const char* query, char* target, ulong_t maxLen)
 {
 #ifdef INTERACTIVE
 	MysakLib_internals_assertInitialized();
+	maxLen--; // Save space for '\0'
 	ulong_t cLen = 0;
 	int c;
 	target[0] = '\0';
@@ -155,7 +157,7 @@ void m_readStr(char* query, char* target, ulong_t maxLen)
 #endif
 }
 
-void m_readStr_plain(char* query, char* target, ulong_t maxLen)
+void m_readStr_plain(const char* query, char* target, ulong_t maxLen)
 {
 	char buf[21];
 	MysakLib_internals_assertInitialized();
@@ -165,7 +167,7 @@ void m_readStr_plain(char* query, char* target, ulong_t maxLen)
 		printf("\r> ");
 	}
 	fflush(stdout);
-	snprintf(buf, 20, "%%%lu[^\n]", maxLen);
+	snprintf(buf, 20, "%%%lu[^\n]", maxLen - 1);
 	fscanf(stdin, buf, target);
 	if (query != NULL) {
 		MysakLib_internals_logInfo("readStr \"%s\": \"%s\"", query, target);
@@ -174,10 +176,15 @@ void m_readStr_plain(char* query, char* target, ulong_t maxLen)
 	}
 }
 
-long m_ioSelection(char* title, char* options)
+long m_ioSelection(const char* title, const char* options, ...)
 {
+	char buffer[1025];
+	va_list args;
+	va_start(args, options);
+	vsnprintf(buffer, 1024, options, args);
+	va_end(args);
 #ifdef INTERACTIVE
-	long optionsCount = m_strCountChar(options, '\n') + 1;
+	long optionsCount = m_strCountChar(buffer, '\n') + 1;
 	long currentOption = 0;
 	long i;
 	long step;
@@ -203,21 +210,21 @@ long m_ioSelection(char* title, char* options)
 		if (c != 0) {
 			step = 0;
 			currentOption = (currentOption + optionsCount) % optionsCount;
-			for (i = 0; options[i] != '\0'; i++) {
-				if (i == 0 || options[i - 1] == '\n') {
-					tmp = m_strIndexOf(&(options[i]), '\n');
+			for (i = 0; buffer[i] != '\0'; i++) {
+				if (i == 0 || buffer[i - 1] == '\n') {
+					tmp = m_strIndexOf(&(buffer[i]), '\n');
 					if (tmp == -1)
-						tmp = strlen(&(options[i]));
+						tmp = strlen(&(buffer[i]));
 					m_setConsolePos((consoleSize.x - (tmp + 4)) / 2, YSpace + step + 2);
 					putchar(currentOption == step ? '[' : ' ');
 					putchar(' ');
 				}
-				if (options[i] == '\n') {
+				if (buffer[i] == '\n') {
 					putchar(' ');
 					putchar(currentOption == step ? ']' : ' ');
 					step++;
 				} else {
-					putchar(options[i]);
+					putchar(buffer[i]);
 				}
 			}
 			putchar(' ');
@@ -245,13 +252,18 @@ long m_ioSelection(char* title, char* options)
 		}
 	}
 #else
-	return m_ioSelection_plain(title, options);
+	return m_ioSelection_plain(title, buffer);
 #endif
 }
 
-long m_ioSelection_plain(char* title, char* options)
+long m_ioSelection_plain(const char* title, const char* options, ...)
 {
-	long optionsCount = m_strCountChar(options, '\n') + 1;
+	char buffer[1025];
+	va_list args;
+	va_start(args, options);
+	vsnprintf(buffer, 1024, options, args);
+	va_end(args);
+	long optionsCount = m_strCountChar(buffer, '\n') + 1;
 	long i;
 	long tmp;
 	MysakLib_internals_assertInitialized();
@@ -260,9 +272,9 @@ long m_ioSelection_plain(char* title, char* options)
 		puts(title);
 		tmp = 1;
 		printf("%ld) ", tmp);
-		for (i = 0; options[i] != '\0'; i++) {
-			putchar(options[i]);
-			if (options[i] == '\n') {
+		for (i = 0; buffer[i] != '\0'; i++) {
+			putchar(buffer[i]);
+			if (buffer[i] == '\n') {
 				tmp++;
 				if (tmp <= optionsCount)
 					printf("%ld) ", tmp);

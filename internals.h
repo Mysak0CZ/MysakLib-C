@@ -28,13 +28,13 @@ bool_t MysakLib_internals_initialized = FALSE;
 void MysakLib_internals_assertInitialized();
 
 /* log error into logfile */
-void MysakLib_internals_logError(char* format, ...);
+void MysakLib_internals_logError(const char* format, ...);
 
 /* log warning into logfile */
-void MysakLib_internals_logWarning(char* format, ...);
+void MysakLib_internals_logWarning(const char* format, ...);
 
 /* log info into logfile */
-void MysakLib_internals_logInfo(char* format, ...);
+void MysakLib_internals_logInfo(const char* format, ...);
 
 /* log debug message into logfile */
-void MysakLib_internals_logDebug(char* format, ...);
+void MysakLib_internals_logDebug(const char* format, ...);

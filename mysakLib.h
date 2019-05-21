@@ -10,9 +10,9 @@
 
 /* Create new MysakLib */
 bool_t MysakLib_initialize();
-bool_t MysakLib_initialize_l(char* logfile);
-bool_t MysakLib_initialize_ll(char* logfile, int logLevel);
-bool_t MysakLib_initialize_lli(char* logfile, int logLevel, int internalLoglevel);
+bool_t MysakLib_initialize_l(const char* logfile);
+bool_t MysakLib_initialize_ll(const char* logfile, int logLevel);
+bool_t MysakLib_initialize_lli(const char* logfile, int logLevel, int internalLoglevel);
 
 /* Delete MysakLib */
 void MysakLib_delete();
@@ -27,13 +27,13 @@ long MysakLib_randInt(long min, long max);
 bool_t m_prob(ulong_t probability);
 
 /* log error into logfile */
-void MysakLib_logError(char* format, ...);
+void MysakLib_logError(const char* format, ...);
 
 /* log warning into logfile */
-void MysakLib_logWarning(char* format, ...);
+void MysakLib_logWarning(const char* format, ...);
 
 /* log info into logfile */
-void MysakLib_logInfo(char* format, ...);
+void MysakLib_logInfo(const char* format, ...);
 
 /* log debug message into logfile */
-void MysakLib_logDebug(char* format, ...);
+void MysakLib_logDebug(const char* format, ...);

@@ -4,7 +4,7 @@
 
 DoubleBuffer_t* DoubleBuffer_new(long size_x, long size_y)
 {
-	DoubleBuffer_t* self = malloc(sizeof(DoubleBuffer_t));
+	DoubleBuffer_t* self = (DoubleBuffer_t*)malloc(sizeof(DoubleBuffer_t));
 	long i;
 	if (self == NULL) {
 		MysakLib_internals_logError("Failed to allocate memory for DoubleBuffer struct");
@@ -18,7 +18,7 @@ DoubleBuffer_t* DoubleBuffer_new(long size_x, long size_y)
 	self->size.y = size_y;
 	self->buffer_2.x = size_x - 1;
 	self->buffer_2.y = size_y - 1;
-	self->frame = malloc(size_x * size_y * sizeof(char));
+	self->frame = (char*)malloc(size_x * size_y * sizeof(char));
 	if (self->frame == NULL) {
 		MysakLib_internals_logError("DoubleBuffer: Failed to allocate memory for frame");
 		free(self);
@@ -27,7 +27,7 @@ DoubleBuffer_t* DoubleBuffer_new(long size_x, long size_y)
 	for (i = 0; i < size_x * size_y; i++) {
 		self->frame[i] = '\0';
 	}
-	self->nxframe = malloc(size_x * size_y * sizeof(char));
+	self->nxframe = (char*)malloc(size_x * size_y * sizeof(char));
 	if (self->nxframe == NULL) {
 		MysakLib_internals_logError("DoubleBuffer: Failed to allocate memory for nxframe");
 		free(self->frame);
@@ -149,7 +149,7 @@ void DoubleBuffer_fillRect(DoubleBuffer_t* self, vector2_t start, vector2_t size
 	DoubleBuffer_fillRectXY(self, start.x, start.y, start.x + size.x - 1, start.y + size.y - 1, c);
 }
 
-void DoubleBuffer_loadFromBuffer(DoubleBuffer_t* self, char* buffer, long sizex, long sizey, long anchorx, long anchory)
+void DoubleBuffer_loadFromBuffer(DoubleBuffer_t* self, const char* buffer, long sizex, long sizey, long anchorx, long anchory)
 {
 	if (buffer == NULL) {
 		MysakLib_internals_logWarning("DoubleBuffer::loadFromBuffer received null buffer");
@@ -168,7 +168,7 @@ void DoubleBuffer_loadFromBuffer(DoubleBuffer_t* self, char* buffer, long sizex,
 	self->needUpdate = TRUE;
 }
 
-void DoubleBuffer_loadFromString(DoubleBuffer_t* self, char* str, long anchorx, long anchory)
+void DoubleBuffer_loadFromString(DoubleBuffer_t* self, const char* str, long anchorx, long anchory)
 {
 	long x = anchorx;
 	long y = anchory;

@@ -33,6 +33,6 @@ void DoubleBuffer_setCharAt(DoubleBuffer_t* self, vector2_t pos, char c);
 void DoubleBuffer_fillRectXY(DoubleBuffer_t* self, long x1, long y1, long x2, long y2, char c);
 void DoubleBuffer_fillRect(DoubleBuffer_t* self, vector2_t start, vector2_t size, char c);
 
-void DoubleBuffer_loadFromBuffer(DoubleBuffer_t* self, char* buffer, long sizex, long sizey, long anchorx, long anchory);
+void DoubleBuffer_loadFromBuffer(DoubleBuffer_t* self, const char* buffer, long sizex, long sizey, long anchorx, long anchory);
 
-void DoubleBuffer_loadFromString(DoubleBuffer_t* self, char* str, long anchorx, long anchory);
+void DoubleBuffer_loadFromString(DoubleBuffer_t* self, const char* str, long anchorx, long anchory);

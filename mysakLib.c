@@ -9,17 +9,17 @@ bool_t MysakLib_initialize()
 	return MysakLib_initialize_lli(NULL, M_LOGLEVEL_INFO, M_LOGLEVEL_WARNING);
 }
 
-bool_t MysakLib_initialize_l(char* logfile)
+bool_t MysakLib_initialize_l(const char* logfile)
 {
 	return MysakLib_initialize_lli(logfile, M_LOGLEVEL_INFO, M_LOGLEVEL_WARNING);
 }
 
-bool_t MysakLib_initialize_ll(char* logfile, int logLevel)
+bool_t MysakLib_initialize_ll(const char* logfile, int logLevel)
 {
 	return MysakLib_initialize_lli(logfile, logLevel, M_LOGLEVEL_WARNING);
 }
 
-bool_t MysakLib_initialize_lli(char* logfile, int logLevel, int internalLoglevel)
+bool_t MysakLib_initialize_lli(const char* logfile, int logLevel, int internalLoglevel)
 {
 	MysakLib_internals_initialized = TRUE;
 	MysakLib_internals_mlib.randSeed = time(NULL);
@@ -85,7 +85,7 @@ bool_t m_prob(ulong_t probability)
 	return result;
 }
 
-void MysakLib_logError(char* format, ...)
+void MysakLib_logError(const char* format, ...)
 {
 	char buffer[1025];
 	va_list args;
@@ -101,7 +101,7 @@ void MysakLib_logError(char* format, ...)
 		fflush(MysakLib_internals_mlib.logfile);
 }
 
-void MysakLib_logWarning(char* format, ...)
+void MysakLib_logWarning(const char* format, ...)
 {
 	char buffer[1025];
 	va_list args;
@@ -117,7 +117,7 @@ void MysakLib_logWarning(char* format, ...)
 		fflush(MysakLib_internals_mlib.logfile);
 }
 
-void MysakLib_logInfo(char* format, ...)
+void MysakLib_logInfo(const char* format, ...)
 {
 	char buffer[1025];
 	va_list args;
@@ -133,7 +133,7 @@ void MysakLib_logInfo(char* format, ...)
 		fflush(MysakLib_internals_mlib.logfile);
 }
 
-void MysakLib_logDebug(char* format, ...)
+void MysakLib_logDebug(const char* format, ...)
 {
 	char buffer[1025];
 	va_list args;
