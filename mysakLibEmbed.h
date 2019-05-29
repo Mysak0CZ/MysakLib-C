@@ -1,7 +1,7 @@
 #pragma once
 
-#include "doubleBuffer.c"
-#include "interface.c"
-#include "internals.c"
-#include "misc.c"
-#include "mysakLib.c"
+#include "doubleBuffer.h"
+#include "interface.h"
+#include "misc.h"
+#include "mysakLib.h"
+#include "types.h"

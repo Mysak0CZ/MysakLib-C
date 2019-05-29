@@ -3,8 +3,8 @@
 #include "misc.h"
 
 #include <ctype.h>
-#include <string.h>
 #include <stdarg.h>
+#include <string.h>
 
 #ifdef _WIN
 #	include <conio.h>
@@ -123,7 +123,7 @@ void m_readStr(const char* query, char* target, ulong_t maxLen)
 {
 #ifdef INTERACTIVE
 	MysakLib_internals_assertInitialized();
-	maxLen--; // Save space for '\0'
+	maxLen--;  // Save space for '\0'
 	ulong_t cLen = 0;
 	int c;
 	target[0] = '\0';

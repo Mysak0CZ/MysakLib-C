@@ -1,11 +1,12 @@
 #include "misc.h"
 
+#include <stdio.h>
+
 #ifdef _WIN
 #	include <Windows.h>
 #else
 #	include <time.h>
 #	include <sys/ioctl.h>
-#	include <stdio.h>
 #endif
 
 void wait(ulong_t milliseconds)
