@@ -16,7 +16,7 @@ typedef char bool_t;
 #define TRUE 1
 #define FALSE 0
 
-typedef unsigned int uint_t;
+typedef unsigned int  uint_t;
 typedef unsigned long ulong_t;
 
 typedef struct _vector2_t

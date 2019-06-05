@@ -14,7 +14,7 @@ void MysakLib_internals_assertInitialized()
 
 void MysakLib_internals_logError(const char* format, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	MysakLib_internals_assertInitialized();
 	va_start(args, format);
@@ -30,7 +30,7 @@ void MysakLib_internals_logError(const char* format, ...)
 
 void MysakLib_internals_logWarning(const char* format, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	MysakLib_internals_assertInitialized();
 	va_start(args, format);
@@ -46,7 +46,7 @@ void MysakLib_internals_logWarning(const char* format, ...)
 
 void MysakLib_internals_logInfo(const char* format, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	MysakLib_internals_assertInitialized();
 	va_start(args, format);
@@ -62,7 +62,7 @@ void MysakLib_internals_logInfo(const char* format, ...)
 
 void MysakLib_internals_logDebug(const char* format, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	MysakLib_internals_assertInitialized();
 	va_start(args, format);
@@ -74,4 +74,18 @@ void MysakLib_internals_logDebug(const char* format, ...)
 	va_end(args);
 	if (MysakLib_internals_mlib.logfile != NULL)
 		fflush(MysakLib_internals_mlib.logfile);
+}
+
+void makeRawConsole()
+{
+#if defined INTERACTIVE && !defined _WIN
+	tcsetattr(STDIN_FILENO, TCSANOW, &(MysakLib_internals_mlib.newTerminos));
+#endif
+}
+
+void makeNormalConsole()
+{
+#if defined INTERACTIVE && !defined _WIN
+	tcsetattr(STDIN_FILENO, TCSANOW, &(MysakLib_internals_mlib.oldTerminos));
+#endif
 }

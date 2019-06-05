@@ -5,7 +5,7 @@
 DoubleBuffer_t* DoubleBuffer_new(long size_x, long size_y)
 {
 	DoubleBuffer_t* self = (DoubleBuffer_t*)malloc(sizeof(DoubleBuffer_t));
-	long i;
+	long            i;
 	if (self == NULL) {
 		MysakLib_internals_logError("Failed to allocate memory for DoubleBuffer struct");
 		return NULL;
@@ -72,9 +72,9 @@ void DoubleBuffer_draw(DoubleBuffer_t* self)
 	if (!self->needUpdate)
 		return;
 	bool_t lastPos = FALSE;
-	long x, y, pos;
-	long sizeY = self->buffer_2.y - self->buffer_1.y + 1;
-	long sizeX = self->buffer_2.x - self->buffer_1.x + 1;
+	long   x, y, pos;
+	long   sizeY = self->buffer_2.y - self->buffer_1.y + 1;
+	long   sizeX = self->buffer_2.x - self->buffer_1.x + 1;
 	for (y = 0; y < sizeY; y++) {
 		lastPos = FALSE;
 		for (x = 0; x < sizeX; x++) {

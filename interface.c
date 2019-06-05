@@ -41,6 +41,7 @@ bool_t m_askYN_plain(const char* question)
 {
 	char answer;
 	MysakLib_internals_assertInitialized();
+	makeNormalConsole();
 	printf("%s [y/n]: ", question);
 	while (TRUE) {
 		fflush(stdout);
@@ -50,11 +51,13 @@ bool_t m_askYN_plain(const char* question)
 		if (answer == 'y') {
 			MysakLib_internals_logInfo("askYN \"%s\": true", question);
 			m_getCharNB();
+			makeRawConsole();
 			return TRUE;
 		}
 		if (answer == 'n') {
 			MysakLib_internals_logInfo("askYN \"%s\": false", question);
 			m_getCharNB();
+			makeRawConsole();
 			return FALSE;
 		}
 		puts("Invalid option!");
@@ -68,7 +71,7 @@ long m_readInt(const char* query)
 	long num = 0;
 	MysakLib_internals_assertInitialized();
 	bool_t negative = FALSE;
-	char c;
+	char   c;
 	while (TRUE) {
 		if (query != NULL) {
 			printf("\r%s> %c%ld  ", query, negative ? '-' : ' ', num);
@@ -103,6 +106,7 @@ long m_readInt_plain(const char* query)
 {
 	long num = 0;
 	MysakLib_internals_assertInitialized();
+	makeNormalConsole();
 	if (query != NULL) {
 		printf("%s> ", query);
 	} else {
@@ -116,6 +120,7 @@ long m_readInt_plain(const char* query)
 	} else {
 		MysakLib_internals_logInfo("readInt NULL: %ld", num);
 	}
+	makeRawConsole();
 	return num;
 }
 
@@ -125,7 +130,7 @@ void m_readStr(const char* query, char* target, ulong_t maxLen)
 	MysakLib_internals_assertInitialized();
 	maxLen--;  // Save space for '\0'
 	ulong_t cLen = 0;
-	int c;
+	int     c;
 	target[0] = '\0';
 	while (TRUE) {
 		if (query != NULL) {
@@ -161,6 +166,7 @@ void m_readStr_plain(const char* query, char* target, ulong_t maxLen)
 {
 	char buf[21];
 	MysakLib_internals_assertInitialized();
+	makeNormalConsole();
 	if (query != NULL) {
 		printf("\r%s> ", query);
 	} else {
@@ -174,23 +180,24 @@ void m_readStr_plain(const char* query, char* target, ulong_t maxLen)
 	} else {
 		MysakLib_internals_logInfo("readStr NULL: \"%s\"", target);
 	}
+	makeRawConsole();
 }
 
 long m_ioSelection(const char* title, const char* options, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	va_start(args, options);
 	vsnprintf(buffer, 1024, options, args);
 	va_end(args);
 #ifdef INTERACTIVE
-	long optionsCount = m_strCountChar(buffer, '\n') + 1;
-	long currentOption = 0;
-	long i;
-	long step;
-	int c;
-	long YSpace;
-	long tmp;
+	long      optionsCount = m_strCountChar(buffer, '\n') + 1;
+	long      currentOption = 0;
+	long      i;
+	long      step;
+	int       c;
+	long      YSpace;
+	long      tmp;
 	vector2_t consoleSize, newConsoleSize;
 	MysakLib_internals_assertInitialized();
 
@@ -249,6 +256,8 @@ long m_ioSelection(const char* title, const char* options, ...)
 				m_clearConsole();
 				MysakLib_internals_logInfo("ioSelections \"%s\": %ld", title, currentOption);
 				return currentOption;
+			case 0:
+				wait(50);
 		}
 	}
 #else
@@ -258,7 +267,7 @@ long m_ioSelection(const char* title, const char* options, ...)
 
 long m_ioSelection_plain(const char* title, const char* options, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	va_start(args, options);
 	vsnprintf(buffer, 1024, options, args);
@@ -267,6 +276,7 @@ long m_ioSelection_plain(const char* title, const char* options, ...)
 	long i;
 	long tmp;
 	MysakLib_internals_assertInitialized();
+	makeNormalConsole();
 
 	while (TRUE) {
 		puts(title);
@@ -287,6 +297,7 @@ long m_ioSelection_plain(const char* title, const char* options, ...)
 		if (tmp >= 1 && tmp <= optionsCount) {
 			getchar();
 			MysakLib_internals_logInfo("ioSelections \"%s\": %ld", title, tmp - 1);
+			makeRawConsole();
 			return tmp - 1;
 		}
 	}

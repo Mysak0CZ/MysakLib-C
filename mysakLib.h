@@ -8,11 +8,14 @@
 #define M_LOGLEVEL_INFO 2
 #define M_LOGLEVEL_DEBUG 3
 
+#ifndef M_LOGFILE_NAME
+#	define M_LOGFILE_NAME "mLib.log"
+#endif
+
 /* Create new MysakLib */
 bool_t MysakLib_initialize();
-bool_t MysakLib_initialize_l(const char* logfile);
-bool_t MysakLib_initialize_ll(const char* logfile, int logLevel);
-bool_t MysakLib_initialize_lli(const char* logfile, int logLevel, int internalLoglevel);
+bool_t MysakLib_initialize_l(int logLevel);
+bool_t MysakLib_initialize_li(int logLevel, int internalLoglevel);
 
 /* Delete MysakLib */
 void MysakLib_delete();

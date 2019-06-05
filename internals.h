@@ -14,18 +14,19 @@
 typedef struct _MysakLib
 {
 	ulong_t randSeed;
-	FILE* logfile;
-	int loglevel;
-	int internalLoglevel;
+	FILE*   logfile;
+	int     loglevel;
+	int     internalLoglevel;
 	ulong_t startTime;
 #if defined INTERACTIVE && !defined _WIN
 	struct termios oldTerminos;
+	struct termios newTerminos;
 #endif
 } MysakLib_t;
 
 /* Globals */
 MysakLib_t MysakLib_internals_mlib;
-bool_t MysakLib_internals_initialized = FALSE;
+bool_t     MysakLib_internals_initialized = FALSE;
 
 /* Functions */
 
@@ -43,3 +44,7 @@ void MysakLib_internals_logInfo(const char* format, ...);
 
 /* log debug message into logfile */
 void MysakLib_internals_logDebug(const char* format, ...);
+
+void makeRawConsole();
+
+void makeNormalConsole();

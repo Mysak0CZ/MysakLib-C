@@ -6,39 +6,33 @@
 
 bool_t MysakLib_initialize()
 {
-	return MysakLib_initialize_lli(NULL, M_LOGLEVEL_INFO, M_LOGLEVEL_WARNING);
+	return MysakLib_initialize_li(M_LOGLEVEL_INFO, M_LOGLEVEL_WARNING);
 }
 
-bool_t MysakLib_initialize_l(const char* logfile)
+bool_t MysakLib_initialize_l(int logLevel)
 {
-	return MysakLib_initialize_lli(logfile, M_LOGLEVEL_INFO, M_LOGLEVEL_WARNING);
+	return MysakLib_initialize_li(logLevel, M_LOGLEVEL_WARNING);
 }
 
-bool_t MysakLib_initialize_ll(const char* logfile, int logLevel)
-{
-	return MysakLib_initialize_lli(logfile, logLevel, M_LOGLEVEL_WARNING);
-}
-
-bool_t MysakLib_initialize_lli(const char* logfile, int logLevel, int internalLoglevel)
+bool_t MysakLib_initialize_li(int logLevel, int internalLoglevel)
 {
 	MysakLib_internals_initialized = TRUE;
 	MysakLib_internals_mlib.randSeed = time(NULL);
 	MysakLib_internals_mlib.startTime = time(NULL);
 	MysakLib_internals_mlib.loglevel = logLevel;
 	MysakLib_internals_mlib.internalLoglevel = internalLoglevel;
-	if (logfile != NULL) {
-		MysakLib_internals_mlib.logfile = fopen(logfile, "w");
-		if (MysakLib_internals_mlib.logfile == NULL) {
-			MysakLib_internals_logWarning("Failed to open logfile");
-		}
-	} else
-		MysakLib_internals_mlib.logfile = NULL;
+	MysakLib_internals_mlib.logfile = fopen(M_LOGFILE_NAME, "w");
+	if (MysakLib_internals_mlib.logfile == NULL) {
+		MysakLib_internals_logWarning("Failed to open logfile");
+	}
 #if defined INTERACTIVE && !defined _WIN
-	struct termios newTerminos;
 	tcgetattr(STDIN_FILENO, &(MysakLib_internals_mlib.oldTerminos));
-	tcgetattr(STDIN_FILENO, &newTerminos);
-	cfmakeraw(&newTerminos);
-	tcsetattr(STDIN_FILENO, TCSANOW, &newTerminos);
+	tcgetattr(STDIN_FILENO, &(MysakLib_internals_mlib.newTerminos));
+	MysakLib_internals_mlib.newTerminos.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP | INLCR | IGNCR | ICRNL | IXON);
+	MysakLib_internals_mlib.newTerminos.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+	MysakLib_internals_mlib.newTerminos.c_cflag &= ~(CSIZE | PARENB);
+	MysakLib_internals_mlib.newTerminos.c_cflag |= CS8;
+	makeRawConsole();
 #endif
 	MysakLib_internals_logDebug("MysakLib: initialized");
 	return TRUE;
@@ -52,9 +46,7 @@ void MysakLib_delete()
 		fclose(MysakLib_internals_mlib.logfile);
 	MysakLib_internals_initialized = FALSE;
 	MysakLib_internals_mlib.logfile = NULL;
-#if defined INTERACTIVE && !defined _WIN
-	tcsetattr(STDIN_FILENO, TCSANOW, &(MysakLib_internals_mlib.oldTerminos));
-#endif
+	makeNormalConsole();
 }
 
 ulong_t MysakLib_randUInt(ulong_t min, ulong_t max)
@@ -87,7 +79,7 @@ bool_t m_prob(ulong_t probability)
 
 void MysakLib_logError(const char* format, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	MysakLib_internals_assertInitialized();
 	va_start(args, format);
@@ -103,7 +95,7 @@ void MysakLib_logError(const char* format, ...)
 
 void MysakLib_logWarning(const char* format, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	MysakLib_internals_assertInitialized();
 	va_start(args, format);
@@ -119,7 +111,7 @@ void MysakLib_logWarning(const char* format, ...)
 
 void MysakLib_logInfo(const char* format, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	MysakLib_internals_assertInitialized();
 	va_start(args, format);
@@ -135,7 +127,7 @@ void MysakLib_logInfo(const char* format, ...)
 
 void MysakLib_logDebug(const char* format, ...)
 {
-	char buffer[1025];
+	char    buffer[1025];
 	va_list args;
 	MysakLib_internals_assertInitialized();
 	va_start(args, format);

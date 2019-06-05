@@ -9,9 +9,9 @@ typedef struct
 	vector2_t buffer_1;
 	vector2_t buffer_2;
 	vector2_t anchor;
-	bool_t needUpdate;
-	char* frame;
-	char* nxframe;
+	bool_t    needUpdate;
+	char*     frame;
+	char*     nxframe;
 } DoubleBuffer_t;
 
 /* Create new DoubleBuffer instance */
