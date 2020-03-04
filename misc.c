@@ -34,7 +34,7 @@ vector2_t m_getConsoleSize()
 	result.y = csbi.srWindow.Bottom - csbi.srWindow.Top + 1;
 #else
 	struct winsize win;
-	ioctl(STDOUT_FILENO, TIOCGWINSZ, &win);
+	ioctl(fileno(stdout), TIOCGWINSZ, &win);
 	result.x = win.ws_col;
 	result.y = win.ws_row;
 #endif

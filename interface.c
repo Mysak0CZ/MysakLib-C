@@ -71,7 +71,7 @@ long m_readInt(const char* query)
 	long num = 0;
 	MysakLib_internals_assertInitialized();
 	bool_t negative = FALSE;
-	char   c;
+	char c;
 	while (TRUE) {
 		if (query != NULL) {
 			printf("\r%s> %c%ld  ", query, negative ? '-' : ' ', num);
@@ -130,7 +130,7 @@ void m_readStr(const char* query, char* target, ulong_t maxLen)
 	MysakLib_internals_assertInitialized();
 	maxLen--;  // Save space for '\0'
 	ulong_t cLen = 0;
-	int     c;
+	int c;
 	target[0] = '\0';
 	while (TRUE) {
 		if (query != NULL) {
@@ -185,19 +185,19 @@ void m_readStr_plain(const char* query, char* target, ulong_t maxLen)
 
 long m_ioSelection(const char* title, const char* options, ...)
 {
-	char    buffer[1025];
+	char buffer[1025];
 	va_list args;
 	va_start(args, options);
 	vsnprintf(buffer, 1024, options, args);
 	va_end(args);
 #ifdef INTERACTIVE
-	long      optionsCount = m_strCountChar(buffer, '\n') + 1;
-	long      currentOption = 0;
-	long      i;
-	long      step;
-	int       c;
-	long      YSpace;
-	long      tmp;
+	long optionsCount = m_strCountChar(buffer, '\n') + 1;
+	long currentOption = 0;
+	long i;
+	long step;
+	int c = 1;
+	long YSpace = 0;
+	long tmp;
 	vector2_t consoleSize, newConsoleSize;
 	MysakLib_internals_assertInitialized();
 
@@ -267,7 +267,7 @@ long m_ioSelection(const char* title, const char* options, ...)
 
 long m_ioSelection_plain(const char* title, const char* options, ...)
 {
-	char    buffer[1025];
+	char buffer[1025];
 	va_list args;
 	va_start(args, options);
 	vsnprintf(buffer, 1024, options, args);
